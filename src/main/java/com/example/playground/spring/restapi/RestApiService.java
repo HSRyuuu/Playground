@@ -107,9 +107,9 @@ public class RestApiService {
 
             log.info("[{}] API Response: Status=[{}], TimeElapsed={}ms, Body=[{}]",
                     httpMethod, response.getStatusCode(), System.currentTimeMillis() - startTime, response.getBody());
-            return new ApiResponse(response.getStatusCode(), null, response.getBody());
+            return new ApiResponse((HttpStatus) response.getStatusCode(), null, response.getBody());
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            return new ApiResponse(e.getStatusCode(), e.getResponseBodyAsString(), e.getMessage());
+            return new ApiResponse((HttpStatus) e.getStatusCode(), e.getResponseBodyAsString(), e.getMessage());
         } catch (RestClientException e) {
             return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, null, e.getMessage());
         } catch (Exception e) {
