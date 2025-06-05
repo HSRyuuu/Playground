@@ -12,9 +12,10 @@ import java.util.UUID;
 @ToString
 public class UserDto {
 
-    private UUID id;
     private String username;
-    private String groupName;
+    private UUID id;
+
+   // private String groupName;
 //    private String orderItemName;
 //    private String paymentMethod;
 }

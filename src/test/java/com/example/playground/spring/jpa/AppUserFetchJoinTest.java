@@ -37,7 +37,8 @@ public class AppUserFetchJoinTest {
         void userJpql() {
             String userName = "user1";
             // 사용자 하나 조회 (user1)
-            AppUser user = userRepository.findWithOrdersAndPaymentsByName(userName).orElseThrow();
+            AppUser user = userRepository.findWithOrdersAndPaymentsByName(userName)
+                    .orElseThrow();
 
             System.out.println("### user.orderList ###");
             for(Order order : user.getOrders()) {
@@ -102,25 +103,25 @@ public class AppUserFetchJoinTest {
         void badExample() {
             List<String> paymentMethods = List.of("PAYPAL");
             List<String> orderItemNames = List.of("order1", "order2");
-            PageRequest pageRequest = PageRequest.of(0, 5);
+            PageRequest pageRequest = PageRequest.of(0, 50);
 
             List<UserDto> users = customUserRepository.searchUserBadExample( paymentMethods, orderItemNames, pageRequest);
             for(UserDto user : users) {
                 System.out.println(user.toString());
             }
         }
-        @Test
-        @Transactional
-        void goodExample() {
-            List<String> paymentMethods = List.of("PAYPAL");
-            List<String> orderItemNames = List.of("order1", "order2");
-            PageRequest pageRequest = PageRequest.of(0, 5);
+@Test
+@Transactional
+void goodExample() {
+    List<String> paymentMethods = List.of("PAYPAL");
+    List<String> orderItemNames = List.of("order1", "order2");
+    PageRequest pageRequest = PageRequest.of(0, 5);
 
-            List<UserDto> users = customUserRepository.searchUser( paymentMethods, orderItemNames, pageRequest);
-            for(UserDto user : users) {
-                System.out.println(user.toString());
-            }
-        }
+    List<UserDto> users = customUserRepository.searchUser( paymentMethods, orderItemNames, pageRequest);
+    for(UserDto user : users) {
+        System.out.println(user.toString());
+    }
+}
     }
 
 

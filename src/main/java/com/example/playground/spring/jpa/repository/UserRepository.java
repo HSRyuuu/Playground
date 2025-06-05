@@ -12,8 +12,12 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<AppUser, UUID> {
 
-    Optional<AppUser> findByName(String name);
-
-    @Query("SELECT u FROM AppUser u LEFT JOIN FETCH u.orders LEFT JOIN FETCH u.payments WHERE u.name = :name")
+    @Query("""
+        SELECT u
+        FROM AppUser u
+        LEFT JOIN FETCH u.orders
+        LEFT JOIN FETCH u.payments WHERE u.name = :name
+        """
+    )
     Optional<AppUser> findWithOrdersAndPaymentsByName(@Param("name") String name);
 }

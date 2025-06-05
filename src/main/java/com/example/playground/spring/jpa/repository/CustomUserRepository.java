@@ -55,7 +55,6 @@ public class CustomUserRepository {
                         group.name.as("groupName")
                 ))
                 .from(user)
-                .leftJoin(user.group, group)
                 .leftJoin(user.orders, order)
                 .leftJoin(user.payments, payment)
                 .where(order.itemName.in(orderItemNames).or(payment.method.in(paymentMethods)))
@@ -67,32 +66,30 @@ public class CustomUserRepository {
     /**
      * Cartesian Product 문제 발생 방지
      */
-    public List<UserDto> searchUser(List<String> paymentMethods, List<String> orderItemNames, Pageable pageable) {
-        List<UUID> userIds = queryFactory.select(user.id)
-                .distinct()
-                .from(user)
-                .leftJoin(user.orders, order)
-                .leftJoin(user.payments, payment)
-                .where(order.itemName.in(orderItemNames).or(payment.method.in(paymentMethods)))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+public List<UserDto> searchUser(List<String> paymentMethods, List<String> orderItemNames, Pageable pageable) {
+    List<UUID> userIds = queryFactory.select(user.id)
+            .distinct()
+            .from(user)
+            .leftJoin(user.orders, order)
+            .leftJoin(user.payments, payment)
+            .where(order.itemName.in(orderItemNames).or(payment.method.in(paymentMethods)))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
 
-        if(userIds.isEmpty()) {
-            return List.of();
-        }
-
-        return queryFactory
-                .select(Projections.fields(
-                        UserDto.class,
-                        user.id,
-                        user.name.as("username"),
-                        group.name.as("groupName")
-                ))
-                .from(user)
-                .leftJoin(user.group, group)
-                .where(user.id.in(userIds))
-                .fetch();
+    if(userIds.isEmpty()) {
+        return List.of();
     }
+
+    return queryFactory
+            .select(Projections.fields(
+                    UserDto.class,
+                    user.id,
+                    user.name.as("username")
+            ))
+            .from(user)
+            .where(user.id.in(userIds))
+            .fetch();
+}
 
 }

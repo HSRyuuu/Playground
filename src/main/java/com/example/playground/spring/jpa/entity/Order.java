@@ -14,7 +14,7 @@ import java.util.UUID;
 @ToString
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class, property = "id")
 @Entity
-@Table(name = "orders") // 'order'는 예약어라 주의!
+@Table(name = "orders")
 public class Order {
 
     @Id
