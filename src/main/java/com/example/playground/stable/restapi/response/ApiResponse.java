@@ -1,4 +1,4 @@
-package com.example.playground.spring.restapi.response;
+package com.example.playground.stable.restapi.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

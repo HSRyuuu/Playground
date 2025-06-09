@@ -1,7 +1,7 @@
-package com.example.playground.spring.restapi.util;
+package com.example.playground.stable.restapi.util;
 
-import com.example.playground.spring.restapi.request.ExtraHeaders;
-import com.example.playground.spring.restapi.request.QueryParams;
+import com.example.playground.stable.restapi.request.ExtraHeaders;
+import com.example.playground.stable.restapi.request.QueryParams;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.util.UriComponentsBuilder;
 

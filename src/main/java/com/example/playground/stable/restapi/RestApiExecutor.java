@@ -1,9 +1,9 @@
-package com.example.playground.spring.restapi;
+package com.example.playground.stable.restapi;
 
-import com.example.playground.spring.restapi.request.ExtraHeaders;
-import com.example.playground.spring.restapi.request.QueryParams;
-import com.example.playground.spring.restapi.response.ApiResponse;
-import com.example.playground.spring.restapi.util.RestApiUtils;
+import com.example.playground.stable.restapi.request.ExtraHeaders;
+import com.example.playground.stable.restapi.request.QueryParams;
+import com.example.playground.stable.restapi.response.ApiResponse;
+import com.example.playground.stable.restapi.util.RestApiUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-public class RestApiService {
+public class RestApiExecutor {
 
     private final RestTemplate restTemplate = new RestTemplate();
 

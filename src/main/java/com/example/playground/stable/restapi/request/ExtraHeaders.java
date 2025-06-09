@@ -1,6 +1,6 @@
-package com.example.playground.spring.restapi.request;
+package com.example.playground.stable.restapi.request;
 
-import com.example.playground.spring.restapi.util.RestApiUtils;
+import com.example.playground.stable.restapi.util.RestApiUtils;
 import lombok.Getter;
 import lombok.ToString;
 

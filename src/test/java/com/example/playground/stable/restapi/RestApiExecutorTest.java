@@ -1,8 +1,9 @@
-package com.example.playground.spring.restapi;
+package com.example.playground.stable.restapi;
 
-import com.example.playground.spring.restapi.response.ApiResponse;
-import com.example.playground.spring.restapi.request.ExtraHeaders;
-import com.example.playground.spring.restapi.request.QueryParams;
+import com.example.playground.stable.restapi.RestApiExecutor;
+import com.example.playground.stable.restapi.response.ApiResponse;
+import com.example.playground.stable.restapi.request.ExtraHeaders;
+import com.example.playground.stable.restapi.request.QueryParams;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-class RestApiServiceTest {
+class RestApiExecutorTest {
 
-    private final RestApiService restApiService = new RestApiService();
+    private final RestApiExecutor restApiExecutor = new RestApiExecutor();
     private final String BASE_URL = "https://jsonplaceholder.typicode.com";
 
     @Nested
@@ -24,7 +25,7 @@ class RestApiServiceTest {
         @DisplayName("(1) pure get")
         void getTest1(){
             String path = "/posts/1";
-            ApiResponse response = restApiService.get(BASE_URL + path);
+            ApiResponse response = restApiExecutor.get(BASE_URL + path);
             System.out.println(" ### RESPONSE ### ");
             System.out.println(response);
         }
@@ -37,7 +38,7 @@ class RestApiServiceTest {
             ExtraHeaders headers = new ExtraHeaders()
                     .add("Content-Type", "application/json")
                     .add("access_token", "123123");
-            ApiResponse response = restApiService.get(BASE_URL + path, queryParams, headers, null);
+            ApiResponse response = restApiExecutor.get(BASE_URL + path, queryParams, headers, null);
             System.out.println(" ### RESPONSE ### ");
             System.out.println(response);
         }
@@ -57,7 +58,7 @@ class RestApiServiceTest {
             bodyJson.put("title", "테스트 제목");
             bodyJson.put("body", "테스트 내용. This posts body for test.");
 
-            ApiResponse response = restApiService.post(BASE_URL + path, bodyJson);
+            ApiResponse response = restApiExecutor.post(BASE_URL + path, bodyJson);
             System.out.println(" ### RESPONSE ### ");
             System.out.println(response);
 
@@ -83,7 +84,7 @@ class RestApiServiceTest {
                     .add("Content-Type", "application/json")
                     .add("access_token", "test-123-123");
 
-            ApiResponse response = restApiService.put(BASE_URL + path, headers, bodyJson);
+            ApiResponse response = restApiExecutor.put(BASE_URL + path, headers, bodyJson);
             System.out.println(" ### RESPONSE ### ");
             System.out.println(response);
 
@@ -104,7 +105,7 @@ class RestApiServiceTest {
                     .add("Content-Type", "application/json")
                     .add("access_token", "test-123-123");
 
-            ApiResponse response = restApiService.delete(BASE_URL + path, headers);
+            ApiResponse response = restApiExecutor.delete(BASE_URL + path, headers);
             System.out.println(" ### RESPONSE ### ");
             System.out.println(response);
         }
