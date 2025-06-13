@@ -1,6 +1,6 @@
 package com.example.playground.spring.jpa.dto;
 
-import com.example.playground.java.mock.TestDto;
+import com.example.playground.stable.mock.test.MockTestDto;
 import lombok.*;
 
 import java.util.List;
@@ -11,5 +11,5 @@ import java.util.UUID;
 public class UserDto {
     private String username;
     private UUID id;
-    private List<TestDto> test;
+    private List<MockTestDto> test;
 }
