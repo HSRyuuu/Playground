@@ -4,6 +4,7 @@ import com.example.playground.stable.mock.util.MockContext;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class ObjectValueGenerator implements MockValueGenerator{
@@ -15,37 +16,38 @@ public class ObjectValueGenerator implements MockValueGenerator{
     }
 
     @Override
-    public boolean supports(Field field) {
+    public boolean supports(Class<?> rawType, Type genericType) {
         return true;
     }
 
     @Override
-    public Object generate(Field field, MockContext context) {
-        Class<?> type = field.getType();
-        return generate(type, context);
-    }
-
-    public <T> T generate(Class<T> clazz, MockContext context) {
+    public Object generate(Class<?> rawType, Type genericType, MockContext context) {
         if (!context.canGoDeeper()) return null;
         context.enter();
 
         try {
-            Constructor<T> constructor = clazz.getDeclaredConstructor();
+            Constructor<?> constructor = rawType.getDeclaredConstructor();
             constructor.setAccessible(true);
-            T instance = constructor.newInstance();
-            for (Field field : clazz.getDeclaredFields()) {
+            Object instance = constructor.newInstance();
+
+            for (Field field : rawType.getDeclaredFields()) {
                 field.setAccessible(true);
-                for (MockValueGenerator gen : generators) {
-                    if (gen.supports(field)) {
-                        Object value = gen.generate(field, context);
+
+                Class<?> fieldType = field.getType();
+                Type fieldGenericType = field.getGenericType();
+
+                for (MockValueGenerator generator : generators) {
+                    if (generator.supports(fieldType, fieldGenericType)) {
+                        Object value = generator.generate(fieldType, fieldGenericType, context);
                         field.set(instance, value);
                         break;
                     }
                 }
             }
+
             return instance;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to instantiate: " + clazz, e);
+            throw new RuntimeException("Failed to instantiate: " + rawType, e);
         } finally {
             context.exit();
         }

@@ -3,6 +3,7 @@ package com.example.playground.stable.mock.generator;
 import com.example.playground.stable.mock.util.MockContext;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -12,7 +13,7 @@ public class PrimitiveValueGenerator implements MockValueGenerator {
     private static final Map<Class<?>, Supplier<?>> SUPPLIERS = new HashMap<>();
 
     static {
-        SUPPLIERS.put(String.class, () -> "mock_" + RANDOM.nextInt(1000));
+        SUPPLIERS.put(String.class, () -> "mock_String_" + RANDOM.nextInt(1000));
         SUPPLIERS.put(int.class, () -> RANDOM.nextInt(100));
         SUPPLIERS.put(Integer.class, () -> RANDOM.nextInt(100));
         SUPPLIERS.put(long.class, () -> RANDOM.nextLong(1000));
@@ -28,15 +29,15 @@ public class PrimitiveValueGenerator implements MockValueGenerator {
 
 
     @Override
-    public boolean supports(Field field) {
-        return SUPPLIERS.containsKey(field.getType());
+    public boolean supports(Class<?> rawType, Type genericType) {
+        return SUPPLIERS.containsKey(rawType);
     }
 
     @Override
-    public Object generate(Field field, MockContext mockContext) {
-        Object value = SUPPLIERS.get(field.getType()).get();
-        if (field.getType() == String.class) {
-            return field.getName() + "_" + value;
+    public Object generate(Class<?> rawType, Type genericType, MockContext context) {
+        Object value = SUPPLIERS.get(rawType).get();
+        if (rawType == String.class) {
+            return value;
         }
         return value;
     }

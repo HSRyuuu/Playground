@@ -26,7 +26,7 @@ class MockDataCreatorTest {
 
         // 문자열 & UUID
         assertNotNull(dto.getStringField());
-        assertTrue(dto.getStringField().startsWith("stringField_"));
+        assertTrue(dto.getStringField().startsWith("mock_"));
         assertNotNull(dto.getUuidField());
 
         // Enum

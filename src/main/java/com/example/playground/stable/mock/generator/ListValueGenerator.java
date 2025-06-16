@@ -13,56 +13,41 @@ public class ListValueGenerator implements MockValueGenerator {
 
     private final List<MockValueGenerator> generators;
     private final int listSize;
+    private static final int DEFAULT_LIST_SIZE = 2;
+
     public ListValueGenerator(List<MockValueGenerator> generators) {
-        this.generators = generators;
-        this.listSize = 2;
+        this(generators, DEFAULT_LIST_SIZE);
     }
+
     public ListValueGenerator(List<MockValueGenerator> generators, int listSize) {
         this.generators = generators;
         this.listSize = listSize;
     }
 
     @Override
-    public boolean supports(Field field) {
-        return List.class.isAssignableFrom(field.getType());
+    public boolean supports(Class<?> rawType, Type genericType) {
+        return List.class.isAssignableFrom(rawType) && genericType instanceof ParameterizedType;
     }
 
     @Override
-    public Object generate(Field field, MockContext context) {
-        Type genericType = field.getGenericType();
-        if (genericType instanceof ParameterizedType pt) {
-            Type actualType = pt.getActualTypeArguments()[0];
-            if (actualType instanceof Class<?> genericClass) {
-                List<Object> list = new ArrayList<>();
+    public Object generate(Class<?> rawType, Type genericType, MockContext context) {
+        if (!(genericType instanceof ParameterizedType pt)) return List.of();
 
-                for (int i = 0; i < listSize; i++) {
-                    Object value = this.findGenerator(genericClass).generate(dummyField(genericClass), context);
-                    list.add(value);
-                }
-                return list;
-            }
+        Type elementType = pt.getActualTypeArguments()[0];
+        if (!(elementType instanceof Class<?> elementClass)) return List.of();
+
+        List<Object> list = new ArrayList<>();
+        for (int i = 0; i < listSize; i++) {
+            MockValueGenerator generator = this.findGenerator(elementClass, elementType);
+            list.add(generator.generate(elementClass, elementType, context));
         }
-        return List.of();
+        return list;
     }
 
-    private MockValueGenerator findGenerator(Class<?> clazz){
-        for(MockValueGenerator generator : generators){
-            if(generator.supports(this.dummyField(clazz))){
-                return generator;
-            }
-        }
-        throw new UnsupportedOperationException("No generator found for " + clazz);
-    }
-
-    private Field dummyField(Class<?> clazz){
-        try{
-            return Dummy.class.getDeclaredField("value");
-        }catch (Exception e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static class Dummy {
-        public Object value;
+    private MockValueGenerator findGenerator(Class<?> rawType, Type genericType) {
+        return generators.stream()
+                .filter(g -> g.supports(rawType, genericType))
+                .findFirst()
+                .orElseThrow(() -> new UnsupportedOperationException("No generator found for " + rawType));
     }
 }
